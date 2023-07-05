@@ -2,6 +2,13 @@ const express = require("express");
 const expressHandlebars = require("express-handlebars");
 const app = express();
 const port = process.env.PORT || 3000;
+const fortunes = [
+  "Conquer your fears or they will conquer you.",
+  "Rivers needs springs.",
+  "Do not fear what you don't know",
+  "You will have a pelasant surprise",
+  "Whenever possible, keep it simple",
+];
 
 app.use(express.static(__dirname + "/public"));
 
@@ -19,7 +26,8 @@ app.get("/", (req, res) => {
 });
 
 app.get("/about", (req, res) => {
-  res.render("about");
+  const randomFortune = fortunes[Math.floor(Math.random() * fortunes.length)];
+  res.render("about", { fortune: randomFortune });
 });
 
 app.use((req, res) => {
