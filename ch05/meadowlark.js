@@ -17,11 +17,15 @@ app.set("view engine", "handlebars");
 
 app.get("/", handlers.home);
 
-app.get("/about", (req, res) => handlers.about);
+app.get("/about", (req, res) => handlers.about(req, res));
 
 app.use(handlers.notFound);
 app.use(handlers.serverError);
 
-app.listen(port, () => {
-  console.log(`server started on port ${port}`);
-});
+if (require.main === module) {
+  app.listen(port, () => {
+    console.log(`server started on port ${port}`);
+  });
+} else {
+  module.exports = app;
+}
