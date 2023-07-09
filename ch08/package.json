@@ -6,7 +6,7 @@
   "scripts": {
     "test": "jest",
     "lint": "eslint meadowlark.js lib",
-    "start": "node meadowlark.js"
+    "start": "nodemon meadowlark.js"
   },
   "author": "",
   "license": "ISC",
