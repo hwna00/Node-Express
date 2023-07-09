@@ -10,6 +10,13 @@ app.engine(
   "handlebars",
   expressHandlebars({
     defaultLayout: "main",
+    helpers: {
+      section: function (name, options) {
+        if (!this._sections) this._sections = {};
+        this._sections[name] = options.fn(this);
+        return null;
+      },
+    },
   })
 );
 
@@ -18,6 +25,8 @@ app.set("view engine", "handlebars");
 app.get("/", handlers.home);
 
 app.get("/about", (req, res) => handlers.about(req, res));
+
+app.get("/section-test", handlers.sectionTest);
 
 app.use(handlers.notFound);
 app.use(handlers.serverError);
