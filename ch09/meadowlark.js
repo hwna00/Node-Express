@@ -2,6 +2,7 @@ const express = require("express");
 const expressHandlebars = require("express-handlebars");
 const multiparty = require("multiparty");
 const cookieParser = require("cookie-parser");
+const expressSession = require("express-session");
 const handlers = require("./lib/handlers");
 const weatherMiddleware = require("./lib/middleware/weather");
 const credentials = require("../credendtials.development");
@@ -30,6 +31,13 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(weatherMiddleware);
 app.use(cookieParser(credentials.cookieSecret));
+app.use(
+  expressSession({
+    resave: false,
+    saveUninitialized: false,
+    secret: credentials.cookieSecret,
+  })
+);
 
 app.get("/", handlers.home);
 app.get("/about", (req, res) => handlers.about(req, res));
