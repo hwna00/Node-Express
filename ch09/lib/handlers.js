@@ -1,6 +1,8 @@
 const fortune = require("./fortune");
 
 exports.home = (req, res) => {
+  res.cookie("monster", "nom nom");
+  res.cookie("signed_monster", "nom nom", { signed: true });
   res.render("home");
 };
 
