@@ -3,9 +3,11 @@ const expressHandlebars = require("express-handlebars");
 const multiparty = require("multiparty");
 const cookieParser = require("cookie-parser");
 const expressSession = require("express-session");
+
 const handlers = require("./lib/handlers");
 const weatherMiddleware = require("./lib/middleware/weather");
-const credentials = require("../credendtials.development");
+const credentials = require("../.credentials.development");
+const flashMiddleware = require("./lib/middleware/flash");
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -30,6 +32,7 @@ app.use(express.static(__dirname + "/public"));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(weatherMiddleware);
+app.use(flashMiddleware);
 app.use(cookieParser(credentials.cookieSecret));
 app.use(
   expressSession({
@@ -47,6 +50,7 @@ app.get("/section-test", handlers.sectionTest);
 app.get("/newsletter-signup", handlers.newsletterSignup);
 app.post("/newsletter-signup/process", handlers.newsletterSignupProcess);
 app.get("/newsletter-signup/thank-you", handlers.newsletterSignupThankYou);
+app.get("/newsletter-archive", handlers.newsletterSignupThankYou);
 
 //* handlers for fetch/JSON form submission
 app.get("/newsletter", handlers.newsletter);

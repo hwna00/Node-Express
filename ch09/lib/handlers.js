@@ -1,4 +1,16 @@
 const fortune = require("./fortune");
+const VALID_EMAIL_REGEX = new RegExp(
+  "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@" +
+    "[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?" +
+    "(?:.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$"
+);
+
+class NewsletterSignup {
+  constructor({ name, email }) {
+    (this.name = name), (this.email = email);
+  }
+  async save() {}
+}
 
 exports.home = (req, res) => {
   res.cookie("monster", "nom nom");
@@ -18,10 +30,35 @@ exports.newsletterSignup = (req, res) => {
 };
 
 exports.newsletterSignupProcess = (req, res) => {
-  console.log("CSRF token (from hidden form field): " + req.body._csrf);
-  console.log("Name (from visible form field): " + req.body.name);
-  console.log("Email (from visible form field): " + req.body.email);
-  res.redirect(303, "/newsletter-signup-thank-you");
+  const name = req.body.name || "";
+  const email = req.body.email || "";
+  if (!VALID_EMAIL_REGEX.test(email)) {
+    req.session.flash = {
+      type: "danger",
+      intro: "Validation error!",
+      message: "The email address you entered was not valid",
+    };
+    return res.redirect(303, "/newsletter-signup");
+  }
+  new NewsletterSignup({ name, email })
+    .save()
+    .then(() => {
+      req.session.flash = {
+        type: "success",
+        intro: "Thank you!",
+        message: "You have now been signed up for the newsletter",
+      };
+      return res.redirect(303, "/newsletter-archive");
+    })
+    // eslint-disable-next-line no-unused-vars
+    .catch((err) => {
+      req.session.flash = {
+        type: "danger",
+        intro: "Database error!",
+        message: "There was a database error; please try again later.",
+      };
+      return res.redirect(303, "/newsletter-archive");
+    });
 };
 
 exports.newsletterSignupThankYou = (req, res) =>
