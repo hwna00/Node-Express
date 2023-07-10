@@ -6,9 +6,6 @@ const weatherMiddleware = require("./lib/middleware/weather");
 const app = express();
 const port = process.env.PORT || 3000;
 
-app.use(express.static(__dirname + "/public"));
-app.use(weatherMiddleware);
-
 app.engine(
   "handlebars",
   expressHandlebars({
@@ -25,15 +22,21 @@ app.engine(
 
 app.set("view engine", "handlebars");
 
+app.use(express.static(__dirname + "/public"));
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(weatherMiddleware);
+
 app.get("/", handlers.home);
-
 app.get("/about", (req, res) => handlers.about(req, res));
-
 app.get("/section-test", handlers.sectionTest);
 
 app.get("/newsletter-signup", handlers.newsletterSignup);
 app.post("/newsletter-signup/process", handlers.newsletterSignupProcess);
 app.get("/newsletter-signup/thank-you", handlers.newsletterSignupThankYou);
+
+app.get("/newsletter", handlers.newsletter);
+app.post("/api/newsletter-signup", handlers.api.newsletterSignup);
 
 app.use(handlers.notFound);
 app.use(handlers.serverError);
