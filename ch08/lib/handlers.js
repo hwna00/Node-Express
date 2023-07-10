@@ -42,6 +42,13 @@ exports.vacationPhotoContest = (req, res) => {
     month: now.getMonth(),
   });
 };
+exports.vacationPhotoContestAjax = (req, res) => {
+  const now = new Date();
+  res.render("contest/vacation-photo-ajax", {
+    year: now.getFullYear(),
+    month: now.getMonth(),
+  });
+};
 exports.vacationPhotoContestProcess = (req, res, fields, files) => {
   console.log("field data: ", fields);
   console.log("files: ", files);
@@ -49,6 +56,11 @@ exports.vacationPhotoContestProcess = (req, res, fields, files) => {
 };
 exports.vacationPhotoContestProcessThankYou = (req, res) => {
   res.render("contest/vacation-photo-thank-you");
+};
+exports.api.vacationPhotoContest = (req, res, fields, files) => {
+  console.log("field data: ", fields);
+  console.log("files: ", files);
+  res.send({ result: "success" });
 };
 
 exports.notFound = (req, res) => res.render("404");
