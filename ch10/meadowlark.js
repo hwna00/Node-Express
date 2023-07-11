@@ -81,6 +81,13 @@ app.post("/api/vacation-photo-contest/:year/:month", (req, res) => {
   });
 });
 
+//* shopping cart
+app.use(require("./lib/resetValidation"));
+app.use(require("./lib/tourRequireWaiver"));
+app.use(require("./lib/checkGuestCount"));
+app.post("/add-to-cart", handlers.cartProcess);
+app.get("/cart", handlers.cart);
+
 app.use(handlers.notFound);
 app.use(handlers.serverError);
 

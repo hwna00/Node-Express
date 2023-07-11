@@ -4,6 +4,30 @@ const VALID_EMAIL_REGEX = new RegExp(
     "[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?" +
     "(?:.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$"
 );
+const products = [
+  {
+    id: "hPc8YUbFuZM9edw4DaxwHk",
+    name: "Rock Climbing Expedition in Bend",
+    price: 239.95,
+    requiresWaiver: true,
+  },
+  {
+    id: "eyryDtCCu9UUcqe9XgjbRk",
+    name: "Walking Tour of Portland",
+    price: 89.95,
+  },
+  {
+    id: "6oC1Akf6EbcxWZXHQYNFwx",
+    name: "Manzanita Surf Expedition",
+    price: 159.95,
+    maxGuests: 4,
+  },
+  {
+    id: "w6wTWMx39zcBiTdpM9w5J7",
+    name: "Wine Tasting in the Willamette Valley",
+    price: 229.95,
+  },
+];
 
 class NewsletterSignup {
   constructor({ name, email }) {
@@ -102,6 +126,44 @@ exports.api.vacationPhotoContest = (req, res, fields, files) => {
   console.log("field data: ", fields);
   console.log("files: ", files);
   res.send({ result: "success" });
+};
+
+exports.cart = (req, res) => {
+  // eslint-disable-next-line no-unused-vars
+  console.log(req.session);
+  const cart = req.session.cart || { items: [] };
+  const context = { products, cart };
+  console.log("cart");
+  res.render("cart", context);
+};
+exports.cartProcess = (req, res) => {
+  if (!req.session.cart) req.session.cart = { items: [] };
+
+  const { cart } = req.session;
+  Object.keys(req.body).forEach((key) => {
+    if (!key.startsWith("guests-")) return;
+    const productId = key.split("-")[1];
+    const productsById = products.reduce(
+      (byId, p) => Object.assign(byId, { [p.id]: p }),
+      {}
+    );
+    const product = productsById[productId];
+    const guests = Number(req.body[key]);
+
+    if (guests === 0) return;
+
+    if (!cart.items.some((item) => item.product.id === productId)) {
+      cart.items.push({ product, guests: 0 });
+    }
+    const idx = cart.items.findIndex((item) => item.product.id === productId);
+    const item = cart.items[idx];
+    item.guests += guests;
+    if (item.guests < 0) item.guests = 0;
+    if (item.guests === 0) cart.items.splice(idx, 1);
+  });
+
+  console.log(req.session);
+  res.redirect("/cart");
 };
 
 exports.notFound = (req, res) => res.render("404");
