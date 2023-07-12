@@ -10,7 +10,6 @@ const credentials = require("../.credentials.development");
 const flashMiddleware = require("./lib/middleware/flash");
 
 const app = express();
-const port = process.env.PORT || 3000;
 
 app.engine(
   "handlebars",
@@ -91,14 +90,18 @@ app.get("/cart", handlers.cart);
 app.use(handlers.notFound);
 app.use(handlers.serverError);
 
-if (require.main === module) {
-  app.listen(port, () => {
+function startServer(port) {
+  app.listen(port, function () {
     console.log(
-      `Express started in ` +
-        `${app.get("env")} mode at http://localhost:${port}` +
-        `; press Ctrl-C to terminate`
+      `Express started in ${app.get("env")} ` +
+        `mode on http://localhost:${port}` +
+        `; press Ctrl-C to terminate.`
     );
   });
+}
+
+if (require.main === module) {
+  startServer(process.env.PORT || 3000);
 } else {
-  module.exports = app;
+  module.exports = startServer;
 }
