@@ -8,6 +8,9 @@ const handlers = require("./lib/handlers");
 const weatherMiddleware = require("./lib/middleware/weather");
 const credentials = require("../.credentials.development");
 const flashMiddleware = require("./lib/middleware/flash");
+const db = require("./00-mongodb/db");
+
+console.log(db);
 
 const app = express();
 
