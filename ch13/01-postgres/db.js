@@ -22,4 +22,12 @@ module.exports = {
       return vacation;
     });
   },
+  addVocationInSeasonListener: async (email, sku) => {
+    await pool.query(
+      "INSERT INTO vacation_int_season_listeners (email, sku) " +
+        "VALUES ($1, $2) " +
+        "ON CONFLICT DO NOTHINGS",
+      [email, sku]
+    );
+  },
 };
