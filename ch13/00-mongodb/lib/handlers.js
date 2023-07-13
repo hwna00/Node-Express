@@ -110,7 +110,7 @@ function convertFromUSD(value, currency) {
 
 exports.listVacations = async (req, res) => {
   const vacations = await db.getVacations({ available: true });
-  const currency = req.session.currency || "USD";
+  const currency = "USD";
   const context = {
     currency: currency,
     vacations: vacations.map((vacation) => {
