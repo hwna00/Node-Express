@@ -1,5 +1,6 @@
-import logo from "./img/logo.png";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import logo from "./img/logo.png";
+import Vacation from "./Vacation";
 
 function Home() {
   return (
@@ -32,8 +33,9 @@ function App() {
         </header>
       </div>
       <Routes>
-        <Route path="/" exact element={<Home />} />
         <Route path="/about" exact element={<About />} />
+        <Route path="/vacations" exact element={<Vacation />} />
+        <Route path="/" exact element={<Home />} />
         <Route element={<NotFound />} />
       </Routes>
     </Router>
