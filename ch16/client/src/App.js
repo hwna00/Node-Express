@@ -28,7 +28,7 @@ function App() {
         <header>
           <h1>Meadowlark Travel</h1>
           <Link to={"/"}>
-            <img src={logo} alt="" Meadowlark Travel Logo />
+            <img src={logo} alt="Meadowlark Travel Logo" />
           </Link>
         </header>
       </div>
